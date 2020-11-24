@@ -18,16 +18,19 @@ public class FileStore {
     this.s3 = s3;
   }
 
+  // save images to S3
   public void save(String path,
                    String fileName,
                    Optional<Map<String, String>> optionalMetadata,
                    InputStream inputStream) {
       ObjectMetadata metadata = new ObjectMetadata();
+
       optionalMetadata.ifPresent(map -> {
         if (!map.isEmpty()) {
           map.forEach((key, value) -> metadata.addUserMetadata(key, value));
         }
       });
+
       try {
         s3.putObject(path, fileName, inputStream, metadata);
       } catch (AmazonServiceException e) {
